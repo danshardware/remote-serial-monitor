@@ -4,7 +4,7 @@ import { SerialPort } from 'serialport'
 
 export class SerialConfig{
     path = '';
-    baudRate = 9600;
+    baudRate = 115200;
     port = '';
     stopBits = 1;
     dataBits = 8;
