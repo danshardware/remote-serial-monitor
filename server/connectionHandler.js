@@ -74,15 +74,40 @@ export function setup(server){
                 connections.splice(index, 1);
             }
         });
+
+        ws.on('message', message => {
+            try {
+                let msg = JSON.parse(message)
+                if (!msg["channel"]){
+                    console.error("[ERROR] Received invalid message with no channel info")
+                    return
+                }
+
+                let channel = msg["channel"]
+
+                if (channel = "data"){
+                    if (!msg["data"]){
+                        console.error("[ERROR] Received empty data message")
+                        return
+                    }
+                    let key = new Uint8Array(1)
+                    key[0] = message["data"]
+                    p.write(key)
+                }
+            } catch (error) {
+                console.error(`[ERROR] ${error}`)
+            }
+        } )
+        // run this in the "background"
+        setTimeout(connectToSerialPort, 1)
+        return wss;
     });
 
     wss.on('error', (error) => {
         console.error('Error:', error);
     });
 
-    // run this in the "background"
-    setTimeout(connectToSerialPort, 1)
-    return wss;
+
 }    
 
 async function connectToSerialPort(){

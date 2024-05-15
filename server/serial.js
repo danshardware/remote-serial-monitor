@@ -94,7 +94,7 @@ export class Serial {
     }
 
     write(data){
-        this.port.write(data);
+        this._port.write(Uint8Array.from(data));
         return this;
     }
 

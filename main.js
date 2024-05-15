@@ -23,6 +23,7 @@ term.write(`Connecting to \x1B[1;3;31mws://${location.host}/serial-monitor\x1B[0
 
 // Start a websocket connection
 const ws = new WebSocket(`ws://${location.host}/serial-monitor`);
+
 ws.onopen = () => {
     term.writeln("Connected!");
 }
@@ -61,3 +62,11 @@ ws.onmessage = (event) => {
         console.error(error);
     }
 }
+
+// Handle keyboard input
+term.onKey((e/*: { key: string, domEvent: KeyboardEvent }*/) => {
+    const ev = e.domEvent;
+    const printable = !ev.altKey && !ev.ctrlKey && !ev.metaKey;
+
+    ws.send(JSON.stringify({channel: "data", data: e.key}))
+});
